@@ -8,7 +8,11 @@ var favicon = require('serve-favicon');
 // var mongoose= require('mongoose');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var accountRouter = require('./routes/account');
+var geoPlaylistRouter = require('./routes/geoPlaylist/geoPlaylist');
+var mapRouter = require('./routes/geoPlaylist/map');
+var loadingRouter = require('./routes/geoPlaylist/loading');
+var resultsRouter = require('./routes/geoPlaylist/results');
 
 var app = express();
 
@@ -28,7 +32,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(favicon(path.join(__dirname,'public/images', 'favicon.ico')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+app.use('/account', accountRouter);
+app.use('/geoPlaylist', geoPlaylistRouter);
+app.use('/geoPlaylist/map', mapRouter);
+app.use('/geoPlaylist/loading', loadingRouter);
+app.use('/geoPlaylist/results', resultsRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

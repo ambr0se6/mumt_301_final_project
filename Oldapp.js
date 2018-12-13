@@ -60,7 +60,7 @@ app.get('/login', function(req, res){
   var state = generateRandomString(16);
   res.cookie(stateKey, state);
 
-  var scopes = ['user-top-read', 'playlist-modify-public'];
+  var scopes = ['user-top-read', 'playlist-modify-public', 'user-read-private'];
   var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state);
   console.log(authorizeURL);
   res.redirect(authorizeURL);

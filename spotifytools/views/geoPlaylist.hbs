@@ -1,5 +1,24 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
-<p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
-<p>Make sure to keep all page content within the <code>BOOOOOOOP</code>.</p>
+<h1>{{project}}</h1>
+<p>This project is for {{reason}}</p>
+<p>This project is the culmination of a bunch of different APIs used to create a personally curated Spotify playlist based on artists located near a selected area.</p>
+<u><p>API's Used</p></u>
+<p>
+    <ul>
+        <li><code>Spotify's Developer API</code>
+            <ul>
+                <li><a href="https://developer.spotify.com/documentation/general/guides/authorization-guide/" target="_blank" class="btn" id="authentication">Authentication</a></li>
+                <li><a href="https://developer.spotify.com/console/get-search-item/" target="_blank" class="btn" id="search">Search</a></li>
+                <li><a href="https://developer.spotify.com/console/get-current-user-top-artists-and-tracks/" target="_blank" class="btn" id="personalization">Personalization</a></li>
+                <li><a href="https://developer.spotify.com/console/playlists/" target="_blank" class="btn" id="playlists">Playlists</a></li>
+                <li><a href="https://developer.spotify.com/console/get-current-user/" target="_blank" class="btn" id="usersProfile">User's Profile</a></li>
+            </ul>
+        </li>
+        <li><code>Google API's</code>
+            <ul>
+                <li><a href="https://developers.google.com/maps/documentation/javascript/reference/#Marker" class="btn" id="gotoloading">Maps Javascript API</a></li>
+                <li><a href="https://developers.google.com/maps/documentation/geocoding/intro#ReverseGeocoding" class="btn" id="gotoloading">Geocoding API</a></li>
+            </ul>
+        </li>
+    </ul>
+</p>
 <a href="/geoPlaylist/map" class="btn btn-secondary" id="gotoloading">Begin</a>

@@ -1,5 +1,69 @@
-<h1>{{title}}</h1>
-<p>Welcome to {{title}}</p>
-<p>This template has a responsive menu toggling system. The menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will appear/disappear. On small screens, the page content will be pushed off canvas.</p>
-<p>Make sure to keep all page content within the <code>BOOOOOOOP</code>.</p>
+<h1>Step {{step}}</h1>
+<p>Please select a location on the map below by clicking on anywhere in the world.</p>
+<p>When you are satisfied with your chosen location press <code>Next</code>.</p>
+<div id="map"> </div>
+<script>
+    var map;
+    var markers = [];
+
+    function initMap() {
+        var mcgillGym = {lat: 45.5017, lng: -73.5673}
+        //map options
+        var options = {
+            zoom: 2,
+            center: mcgillGym,
+            mapTypeId: 'terrain'
+        }
+        //map
+        map = new google.maps.Map(document.getElementById('map'), options);
+
+        // This event listener will call addMarker() when the map is clicked.
+        map.addListener('click', function(event) {
+            addMarker(event.latLng, 'Selected Location');
+        });
+
+        // Adds a marker at the center of the map.
+        addMarker(mcgillGym, 'Preset Location');
+    }
+
+    // Adds a marker to the map and push to the array.
+    function addMarker(location, title) {
+        deleteMarkers();
+        var marker = new google.maps.Marker({
+            position: location,
+            map: map,
+            title: title
+        });
+        markers.push(marker);
+        map.panTo(location);
+    }
+
+    // Sets the map on all markers in the array.
+    function setMapOnAll(map) {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setMap(map);
+        }
+    }
+
+    // Removes the markers from the map, but keeps them in the array.
+    function clearMarkers() {
+        setMapOnAll(null);
+    }
+
+    // Shows any markers currently in the array.
+    function showMarkers() {
+        setMapOnAll(map);
+    }
+
+    // Deletes all markers in the array by removing references to them.
+    function deleteMarkers() {
+        clearMarkers();
+        markers = [];
+    }
+
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa5mmwM-xOBxvqF4rEgtdTibW3ICMrsBk&callback=initMap" async defer></script>
+<p>Your chosen Location is: <code id='chosenLocation'></code></p>
+<br>
 <a href="/geoPlaylist/loading" class="btn btn-secondary" id="gotoloading">Next</a>
+

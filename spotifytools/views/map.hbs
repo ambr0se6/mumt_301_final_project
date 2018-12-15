@@ -2,15 +2,32 @@
 <p>Please select a location on the map below by clicking on anywhere in the world.</p>
 <p>When you are satisfied with your chosen location press <code>Next</code>.</p>
 <div id="map"> </div>
+<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
 <script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyBSHFozs4SVyIqcbkG___dQeDZC1KP03tU",
+        authDomain: "geoplaylist-1544820108234.firebaseapp.com",
+        projectId: "geoplaylist-1544820108234"
+
+    };
+    firebase.initializeApp(config);
+    // Initialize Cloud Firestore through Firebase
+    var db = firebase.firestore();
+    // Disable deprecated features
+    db.settings({
+        timestampsInSnapshots: true
+    });
     var map;
     var markers = [];
-
+    var position = '45.5017,-73.5673';
+    var APIkey = 'AIzaSyDa5mmwM-xOBxvqF4rEgtdTibW3ICMrsBk';
     function initMap() {
         var mcgillGym = {lat: 45.5017, lng: -73.5673}
         //map options
         var options = {
-            zoom: 2,
+            zoom: 12,
             center: mcgillGym,
             mapTypeId: 'terrain'
         }
@@ -21,7 +38,14 @@
         map.addListener('click', function(event) {
             addMarker(event.latLng, 'Selected Location');
         });
+        google.maps.event.addListener(map, 'click', function( event ){
+            position = "" + event.latLng.lat()+","+ event.latLng.lng();
+            console.log(position);
+            var requestURL = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + position + '&location_type=ROOFTOP&result_type=street_address&key='+ APIkey; 
+            console.log(requestURL);
+            makeRequest(requestURL);
 
+        });
         // Adds a marker at the center of the map.
         addMarker(mcgillGym, 'Preset Location');
     }
@@ -59,6 +83,51 @@
     function deleteMarkers() {
         clearMarkers();
         markers = [];
+    }
+
+    function makeRequest(url) {
+        httpRequest = new XMLHttpRequest();
+
+        if (!httpRequest) {
+            alert('Giving up :( Cannot create an XMLHTTP instance');
+            return false;
+        }
+        httpRequest.onreadystatechange = alertContents;
+        httpRequest.open('GET', url, true);
+        httpRequest.send();
+        
+        //var xmldoc = httpRequest.responseXML;
+    }
+
+    function alertContents() {
+        if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+                updateChosenLocation(JSON.parse(httpRequest.responseText));
+            } else if (httpRequest.status === "ZERO_RESULTS"){
+                alert('There are no possible for this location.');
+            }
+        }
+    }
+    function updateChosenLocation(json){
+        if(json.results[0] == null){
+            document.getElementById('chosenLocation').innerHTML = "The chosen location is not specific enough";
+        } else { 
+            formalAddress = json.results[0].formatted_address;
+            document.getElementById('chosenLocation').innerHTML = formalAddress;
+            writeLocationData(formalAddress);
+        }
+    }
+    // Add the chosen location in the db
+    function writeLocationData(location){
+        db.collection("chosen_location").doc("chosen_location").set({
+        location: location
+        })
+        .then(function() {
+            console.log("Document successfully written!");
+        })
+        .catch(function(error) {
+            console.error("Error writing document: ", error);
+        });
     }
 
 </script>

@@ -7,7 +7,7 @@ var expressHbs = require('express-handlebars');
 var favicon = require('serve-favicon');
 // var mongoose= require('mongoose');
 
-var indexRouter = require('./routes/index');
+var indexRouter = require('./views/index');
 var accountRouter = require('./routes/account');
 var geoPlaylistRouter = require('./routes/geoPlaylist/geoPlaylist');
 var mapRouter = require('./routes/geoPlaylist/map');

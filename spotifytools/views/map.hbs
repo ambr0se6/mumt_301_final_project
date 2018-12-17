@@ -21,7 +21,8 @@
     });
     var map;
     var markers = [];
-    var position = '45.5017,-73.5673';
+    var lat = '45.5017';
+    var lng = '-73.5673';
     var APIkey = 'AIzaSyDa5mmwM-xOBxvqF4rEgtdTibW3ICMrsBk';
     function initMap() {
         var mcgillGym = {lat: 45.5017, lng: -73.5673}
@@ -39,15 +40,17 @@
             addMarker(event.latLng, 'Selected Location');
         });
         google.maps.event.addListener(map, 'click', function( event ){
-            position = "" + event.latLng.lat()+","+ event.latLng.lng();
-            console.log(position);
-            var requestURL = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + position + '&location_type=ROOFTOP&result_type=street_address&key='+ APIkey; 
-            console.log(requestURL);
+            lat = '' + event.latLng.lat();
+            console.log(lat);
+            lng = '' + event.latLng.lng();
+            console.log(lng);
+            var requestURL = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat +','+ lng + '&location_type=ROOFTOP&result_type=street_address&key='+ APIkey; 
             makeRequest(requestURL);
 
         });
         // Adds a marker at the center of the map.
         addMarker(mcgillGym, 'Preset Location');
+        makeRequest('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat +','+ lng + '&location_type=ROOFTOP&result_type=street_address&key='+ APIkey);
     }
 
     // Adds a marker to the map and push to the array.
@@ -120,6 +123,8 @@
     // Add the chosen location in the db
     function writeLocationData(location){
         db.collection("chosen_location").doc("chosen_location").set({
+        lat: lat,
+        lng: lng,
         location: location
         })
         .then(function() {
@@ -129,7 +134,6 @@
             console.error("Error writing document: ", error);
         });
     }
-
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa5mmwM-xOBxvqF4rEgtdTibW3ICMrsBk&callback=initMap" async defer></script>
 <p>Your chosen Location is: <code id='chosenLocation'></code></p>

@@ -1,3 +1,74 @@
 <div class='lds-grid-container'>
     <div class="lds-grid"><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>
 </div>
+<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
+<script>
+    var top10 = [];
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyBSHFozs4SVyIqcbkG___dQeDZC1KP03tU",
+        authDomain: "geoplaylist-1544820108234.firebaseapp.com",
+        projectId: "geoplaylist-1544820108234"
+
+    };
+    firebase.initializeApp(config);
+    // Initialize Cloud Firestore through Firebase
+    var db = firebase.firestore();
+    // Disable deprecated features
+    db.settings({
+        timestampsInSnapshots: true
+    });
+
+    var docRef = db.collection("chosen_location").doc("chosen_location");
+
+    docRef.get().then(function(doc) {
+        if (doc.exists) {
+            console.log("Document data:", doc.data());
+            split = doc.data().location.split(', ');
+            country = split[split.length-1]
+            console.log()
+            makeRequest("https://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country="+ country +"&api_key=4d33f33e040ed32486d12d93658710f7&format=json", true);
+        } else {
+            // doc.data() will be undefined in this case
+            console.log("No such document!");
+        }
+    }).catch(function(error) {
+        console.log("Error getting document:", error);
+    });
+
+        // set request options
+    
+    function makeRequest(url) {
+        httpRequest = new XMLHttpRequest();
+
+        if (!httpRequest) {
+            alert('Giving up :( Cannot create an XMLHTTP instance');
+            return false;
+        }
+        httpRequest.onreadystatechange = alertContents;
+        httpRequest.open('GET', url, true);
+        httpRequest.send();
+        
+        //var xmldoc = httpRequest.responseXML;
+    }
+    function alertContents() {
+        if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+                getTopArtists(JSON.parse(httpRequest.responseText));
+            } else if (httpRequest.status === "ZERO_RESULTS"){
+                alert('There are no possible for this location.');
+            }
+        }
+    }
+    
+    function getTopArtists(topArtists){
+        // foreach nearby city get city details
+        console.log(topArtists);
+        for(var i=20; i<30; i++){
+            top10[i-20]=topArtists.topartists.artist[i].name;
+        }
+        console.log(top10);
+    }
+    
+</script>

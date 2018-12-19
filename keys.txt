@@ -1,7 +1,0 @@
-apiKey: "AIzaSyBSHFozs4SVyIqcbkG___dQeDZC1KP03tU",
-        authDomain: "geoplaylist-1544820108234.firebaseapp.com",
-        projectId: "geoplaylist-1544820108234"
-
-    var APIkey = 'AIzaSyDa5mmwM-xOBxvqF4rEgtdTibW3ICMrsBk' 
-
-    last.fm = &api_key=4d33f33e040ed32486d12d93658710f7&format=json

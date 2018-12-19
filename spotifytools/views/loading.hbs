@@ -5,11 +5,14 @@
 <script src="https://www.gstatic.com/firebasejs/5.5.5/firebase-firestore.js"></script>
 <script>
     var top10 = [];
+    var top10ids = [];
+    var top10genres = [];
+    var top10s5tracks = [];
     // Initialize Firebase
     var config = {
-        apiKey: "AIzaSyBSHFozs4SVyIqcbkG___dQeDZC1KP03tU",
-        authDomain: "geoplaylist-1544820108234.firebaseapp.com",
-        projectId: "geoplaylist-1544820108234"
+        apiKey: ,
+        authDomain: ,
+        projectId: 
 
     };
     firebase.initializeApp(config);
@@ -28,7 +31,7 @@
             split = doc.data().location.split(', ');
             country = split[split.length-1]
             console.log()
-            makeRequest("https://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country="+ country +"&api_key=4d33f33e040ed32486d12d93658710f7&format=json", true);
+            makeRequest("https://ws.audioscrobbler.com/2.0/?method=geo.gettopartists&country="+ country +"&api_key="+ insert api here+"&format=json", true);
         } else {
             // doc.data() will be undefined in this case
             console.log("No such document!");
@@ -61,14 +64,76 @@
             }
         }
     }
+
+    function makeSpotifyArtistsRequest(url, i) {
+        httpRequest = new XMLHttpRequest();
+
+        if (!httpRequest) {
+            alert('Giving up :( Cannot create an XMLHTTP instance');
+            return false;
+        }
+        httpRequest.onreadystatechange = artistContents(i);
+        httpRequest.open('GET', url, true);
+        httpRequest.send();
+        
+    }
+    function artistContents(i){
+        if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+                getArtistIds(JSON.parse(httpRequest.responseText), i);
+            } else if (httpRequest.status === "ZERO_RESULTS"){
+                alert('There are no possible for this location.');
+            }
+        }
+    }
+
+    function makeTopTracksRequest(url, i) {
+        httpRequest = new XMLHttpRequest();
+
+        if (!httpRequest) {
+            alert('Giving up :( Cannot create an XMLHTTP instance');
+            return false;
+        }
+        httpRequest.onreadystatechange = topTracksContents(i);
+        httpRequest.open('GET', url, true);
+        httpRequest.send();
+        
+    }
+    function topTracksContents(i){
+        if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+                getTopTracks(JSON.parse(httpRequest.responseText), i);
+            } else if (httpRequest.status === "ZERO_RESULTS"){
+                alert('There are no possible for this location.');
+            }
+        }
+    }
     
     function getTopArtists(topArtists){
-        // foreach nearby city get city details
         console.log(topArtists);
         for(var i=20; i<30; i++){
             top10[i-20]=topArtists.topartists.artist[i].name;
         }
-        console.log(top10);
+        for(var i=0; i<top10.length; i++){
+            makeSpotifyArtistsRequest('https://api.spotify.com/v1/search?q='+ top10[i]..replace(/\s+/g, "+"); +'&type=artist', i);
+            makeTopTracksRequest(top10ids[i] + '/top-tracks?country=US', i);
+        }
     }
     
+    function getArtistIds(artistQuery, i){
+        console.log(artistQuery);
+        top10ids[i] = artistQuery.artists.items[0].href;
+        top10genres[i] = artistQuery.artists.items[0].genres;
+    }
+
+    function getTopTracks(topTracksQuery, i){
+        console.log(topTracksQuery);
+        for(var i=0; i<10; i++){
+            var tempMid5 = []
+            for(var j=3; j<8; i++){
+                tempMid5[j-3] = topTracksQuery.tracks[j].uri;
+            }
+            top10s5tracks[i] = tempMid5;
+        }
+    }
 </script>

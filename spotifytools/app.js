@@ -12,17 +12,17 @@ var geoPlaylistRouter = require('./routes/geoPlaylist/geoPlaylist');
 var mapRouter = require('./routes/geoPlaylist/map');
 var loadingRouter = require('./routes/geoPlaylist/loading');
 var resultsRouter = require('./routes/geoPlaylist/results');
+var loggedInRouter = require('./routes/loggedIn');
 
-// //Firebase Config and Auth
-var config = {
-  apiKey: "AIzaSyBSHFozs4SVyIqcbkG___dQeDZC1KP03tU",
-  authDomain: "geoplaylist-1544820108234.firebaseapp.com",
-  projectId: "geoplaylist-1544820108234"
+const Firestore = require('@google-cloud/firestore');
 
-};
-// firebase.initializeApp(config);
-// // Initialize Cloud Firestore through Firebase
-// var db = firebase.firestore();
+const firestore = new Firestore({
+  projectId: "geoplaylist-1544820108234",
+  keyFilename: './serviceAccountKey.json',
+});
+
+const settings = {/* your settings... */ timestampsInSnapshots: true};
+firestore.settings(settings);
 
 //Spotify credentials
 var clientId = '090774b1b6b845bc990df0dc4b8335a6';
@@ -76,6 +76,7 @@ app.use('/geoPlaylist', geoPlaylistRouter);
 app.use('/geoPlaylist/map', mapRouter);
 app.use('/geoPlaylist/loading', loadingRouter);
 app.use('/geoPlaylist/results', resultsRouter);
+app.use('/loggedIn', loggedInRouter);
 
 // Spotify Login Trigger
 app.get('/login', function(req, res){
@@ -137,10 +138,23 @@ app.use(function(err, req, res, next) {
 });
 
 function populateUserData(){
-  spotifyApi.getMe()
-  .then(function(data) {
+  spotifyApi.getMe().then(function(data) {
     console.log('Some information about the authenticated user', data.body);
    
+    const document = firestore.doc('user/' + data.body.id);
+    // Enter new data into the document.
+    document.set({
+      country: data.body.country,
+      display_name: data.body.display_name,
+      id: data.body.id, 
+      image_url: data.body.images,
+      loggedIn: true
+    }).then(function() {
+      console.log("User successfully written!");
+    })
+    .catch(function(error) {
+        console.error("Error writing User: ", error);
+    }); 
   }, function(err) {
     console.log('Something went wrong!', err);
   });

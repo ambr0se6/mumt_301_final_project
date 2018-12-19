@@ -7,9 +7,9 @@
 <script>
     // Initialize Firebase
     var config = {
-        apiKey: "AIzaSyBSHFozs4SVyIqcbkG___dQeDZC1KP03tU",
-        authDomain: "geoplaylist-1544820108234.firebaseapp.com",
-        projectId: "geoplaylist-1544820108234"
+        apiKey: ,
+        authDomain: ,
+        projectId: 
 
     };
     firebase.initializeApp(config);
@@ -23,7 +23,7 @@
     var markers = [];
     var lat = '45.5017';
     var lng = '-73.5673';
-    var APIkey = 'AIzaSyDa5mmwM-xOBxvqF4rEgtdTibW3ICMrsBk';
+    var APIkey = ;
     function initMap() {
         var mcgillGym = {lat: 45.5017, lng: -73.5673}
         //map options
@@ -135,7 +135,7 @@
         });
     }
 </script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDa5mmwM-xOBxvqF4rEgtdTibW3ICMrsBk&callback=initMap" async defer></script>
+<script src="https://maps.googleapis.com/maps/api/js?key="+ insertkeyhere +"&callback=initMap" async defer></script>
 <p>Your chosen Location is: <code id='chosenLocation'></code></p>
 <br>
 <a href="/geoPlaylist/loading" class="btn btn-secondary" id="gotoloading">Next</a>
